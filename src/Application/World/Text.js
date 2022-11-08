@@ -9,6 +9,7 @@ export default class Text {
     this.physics = this.application.physics
     this.scene = this.application.scene
     this.resources = this.application.resources
+    this.sound = this.application.sound
     this.textString = 'Bleech'
     this.letterObjects = []
 
@@ -26,10 +27,8 @@ export default class Text {
             bevelSegments: 8,
         }
     }
-   
     this.objectsToUpdate = this.application.objectsToUpdate
 
-    // Wait for resources to load
     this.resources.on('ready', () => {
       this.createText()
     })
@@ -38,14 +37,6 @@ export default class Text {
   setGeometry(letter) {
     this.geometry = new TextGeometry(letter, this.textOptions(this.resources.items.titilliumFont, letter))
     this.geometry.center()
-  }
-
-  setMaterial() {
-    this.material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color('#0856af'),
-      emissive: new THREE.Color('#12205e'),
-      side: THREE.DoubleSide
-    })
   }
 
   setMesh() {
@@ -69,12 +60,14 @@ export default class Text {
    
     this.body.position.copy(this.mesh.position)
     this.physics.world.addBody(this.body)
+    this.body.addEventListener('collide', (e) => {
+      this.sound.playHitSound(e)
+    })
   }
 
   createText() {
-    this.setMaterial()
+    this.material = this.application.material.text
     let x = 0
-    let measure = new THREE.Vector3()
     let prevWidth = 0
     let prevX = 0
 
@@ -88,6 +81,7 @@ export default class Text {
       this.mesh.geometry.computeBoundingBox()
       prevX = this.mesh.position.x
       prevWidth = this.mesh.geometry.boundingBox.max.x
+      this.mesh.position.x = this.mesh.position.x - 1.1
       this.setPhysicBody()
       const mesh = this.mesh,
             body = this.body

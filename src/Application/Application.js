@@ -5,9 +5,11 @@ import Sizes from "./Utils/Sizes"
 import Time from "./Utils/Time"
 import Camera from "./Camera"
 import Renderer from "./Renderer"
+import Material from "./Material"
 import World from "./World/World"
 import Physics from "./World/Physics"
 import Resources from "./Utils/Resources"
+import Sound from "./World/Sound"
 import sources from "./sources"
 
 let instance = null
@@ -30,11 +32,13 @@ export default class Application {
     this.debug = new Debug()
     this.sizes = new Sizes()
     this.time = new Time()
+    this.material = new Material()
     this.scene = new THREE.Scene()
     this.resources = new Resources(sources)
     this.physics = new Physics()
     this.camera = new Camera()
     this.renderer = new Renderer()
+    this.sound = new Sound()
     this.world = new World()
 
     // Resize event
@@ -42,7 +46,6 @@ export default class Application {
 
     // Time tick event
     this.time.on('tick', this.update.bind(this))
-
     // this.cannonDebugger = new CannonDebugger(this.scene, this.physics.world)
   }
 

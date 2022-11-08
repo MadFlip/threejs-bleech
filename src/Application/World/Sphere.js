@@ -3,26 +3,29 @@ import * as CANNON from 'cannon-es'
 import Application from "../Application"
 
 export default class Sphere {
-  constructor(radius, position) {
+  constructor(radius, position, material) {
     this.application = new Application()
     this.physics = this.application.physics
     this.scene = this.application.scene
     this.objectsToUpdate = this.application.objectsToUpdate
+    this.sound = this.application.sound
 
+    this.defaultSettings = [
+      Math.random() / 2 + 0.2,
+      {
+        x: (Math.random() - 0.5) * 3,
+        y: 3,
+        z: (Math.random() - 0.5) * 3
+      },
+    ]
+
+    this.material = material ? material : this.application.material.sphere
     this.setGeometry()
-    this.setMaterial()
     this.createSphere(radius, position)
   }
 
   setGeometry() {
     this.geometry = new THREE.SphereGeometry(1, 20, 20)
-  }
-
-  setMaterial() {
-    this.material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color('#2effdc'),
-      emissive: new THREE.Color('#04342c')
-    })
   }
 
   setMesh(radius, position) {
@@ -43,9 +46,12 @@ export default class Sphere {
     })
     this.body.position.copy(position)
     this.physics.world.addBody(this.body)
+    this.body.addEventListener('collide', (e) => {
+      this.sound.playHitSound(e)
+    })
   }
 
-  createSphere(radius, position) {
+  createSphere(radius = this.defaultSettings[0], position = this.defaultSettings[1]) {
     this.setMesh(radius, position)
     this.setPhysicBody(radius, position)
     const mesh = this.mesh,

@@ -1,3 +1,4 @@
+import * as THREE from "three"
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import EventEmitter from "./EventEmitter"
 
@@ -20,6 +21,7 @@ export default class Resources extends EventEmitter {
   setLoader () {
     this.loaders = {}
     this.loaders.fontLoader = new FontLoader()
+    this.loaders.audioLoader = new THREE.AudioLoader()
   }
 
   startLoading () {
@@ -29,6 +31,17 @@ export default class Resources extends EventEmitter {
           source.path,
           (font) => {
             this.sourceLoaded(source, font)
+          },
+          undefined,
+          (error) => {
+            console.error(error)
+          }
+        )
+      } else if (source.type === 'audio') {
+        this.loaders.audioLoader.load(
+          source.path,
+          (buffer) => {
+            this.sourceLoaded(source, buffer)
           },
           undefined,
           (error) => {

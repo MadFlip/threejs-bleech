@@ -8,23 +8,24 @@ export default class Pyramid {
     this.physics = this.application.physics
     this.scene = this.application.scene
     this.objectsToUpdate = this.application.objectsToUpdate
+    this.sound = this.application.sound
     this.segments = 3
+    this.defaultSettings = [
+      Math.random() / 2 + 0.2,
+      {
+        x: (Math.random() - 0.5) * 3,
+        y: 3,
+        z: (Math.random() - 0.5) * 3
+      }
+    ]
 
+    this.material = this.application.material.pyramid
     this.setGeometry()
-    this.setMaterial()
     this.createPyramid(radius, position)
   }
 
   setGeometry() {
     this.geometry = new THREE.CylinderGeometry(0.005, 1, 1, this.segments)
-  }
-
-  setMaterial() {
-    this.material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color('#0856af'),
-      emissive: new THREE.Color('#07144b'),
-      side: THREE.DoubleSide
-    })
   }
 
   setMesh(radius, position) {
@@ -45,9 +46,12 @@ export default class Pyramid {
     })
     this.body.position.copy(position)
     this.physics.world.addBody(this.body)
+    this.body.addEventListener('collide', (e) => {
+      this.sound.playHitSound(e)
+    })
   }
 
-  createPyramid(radius, position) {
+  createPyramid(radius = this.defaultSettings[0], position = this.defaultSettings[1]) {
     this.setMesh(radius, position)
     this.setPhysicBody(radius, position)
     const mesh = this.mesh,

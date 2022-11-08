@@ -7,22 +7,28 @@ export default class Cube {
     this.application = new Application()
     this.physics = this.application.physics
     this.scene = this.application.scene
+    this.sound = this.application.sound
     this.objectsToUpdate = this.application.objectsToUpdate
 
+    const randomSize = Math.random() + 0.1
+    this.defaultSettings = [
+      randomSize,
+      randomSize,
+      randomSize,
+      {
+        x: (Math.random() - 0.5) * 3,
+        y: 3,
+        z: (Math.random() - 0.5) * 3
+      }
+    ]
+
+    this.material = this.application.material.cube
     this.setGeometry()
-    this.setMaterial()
     this.createCube(width, height, depth, position)
   }
 
   setGeometry() {
     this.geometry = new THREE.BoxGeometry(1, 1, 1)
-  }
-
-  setMaterial() {
-    this.material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color("#ffffff"),
-      emissive: new THREE.Color('#353a4b')
-    })
   }
 
   setMesh(width, height, depth, position) {
@@ -43,9 +49,12 @@ export default class Cube {
     })
     this.body.position.copy(position)
     this.physics.world.addBody(this.body)
+    this.body.addEventListener('collide', (e) => {
+      this.sound.playHitSound(e)
+    })
   }
 
-  createCube(width, height, depth, position) {
+  createCube(width = this.defaultSettings[0], height = this.defaultSettings[1], depth = this.defaultSettings[2], position = this.defaultSettings[3]) {
     this.setMesh(width, height, depth, position)
     this.setPhysicBody(width, height, depth, position)
     const mesh = this.mesh,

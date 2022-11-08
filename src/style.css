@@ -3,45 +3,62 @@
 }
 
 html,
-body
-{
+body {
   margin: 0;
-  padding: 0;    
+  padding: 0;
   overflow: hidden;
   width: 100%;
   height: 100%;
 }
 
-.webgl
-{
+.webgl {
   margin: 0 auto;
-  border-radius: 30px;
+  border-radius: 12px;
   outline: none;
-  background:  #4792ff;
   width: 100%;
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  .webgl {
+    border-radius: 30px;
+  }
 }
 
 .hero {
   position: relative;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
   width: 100%;
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 20px;
+  }
 }
 
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   left: 0;
   text-align: center;
   z-index: 20;
   width: 100%;
-  padding: 40px;
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .hero-buttons {
+    gap: 16px;
+    padding: 40px;
+    bottom: 20px;
+  }
 }
 
 .button {
@@ -51,15 +68,18 @@ body
   border-radius: 30px;
   color: #0a2caf;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1rem;
+  min-height: 58px;
   text-align: center;
   text-decoration: none;
   letter-spacing: .5px;
+  touch-action: manipulation;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
   user-select: none;
   will-change: transform;
@@ -72,6 +92,10 @@ body
   color: #fff;
 }
 
+.button--ghost svg {
+  transform: translate(1px, -2px);
+}
+
 .button:hover {
   background-color: #08238d;
   border-color: #08238d;
@@ -80,4 +104,42 @@ body
 
 .button:active {
   transform: scale(0.97);
+}
+
+.button--sound {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+  border: 0;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  padding: 0.75rem;
+  width: 58px;
+  height: 58px;
+  justify-content: center;
+}
+
+.button--sound svg {
+  width: 28px;
+  height: 28px;
+}
+
+@media (min-width: 768px) {
+  .button {
+    padding: 0.75rem 2rem;
+  }
+
+  .button--sound {
+    right: 40px;
+    top: 40px;
+    padding: 0.75rem;
+  }
+}
+
+[data-toggle-sound="off"] .icon-sound-on {
+  display: none;
+}
+
+[data-toggle-sound="on"] .icon-sound-off {
+  display: none;
 }
